@@ -1,7 +1,27 @@
-import React from "react";
-import servicesData from "./data/services.json";
-import amenitiesData from "./data/amenities.json";
+import React, { useEffect, useState } from "react";
 const HotelInfo = () => {
+  const [servicesData, setServicesData] = useState([]);
+  const [accessibilitiesData, setaccessibilitiesData] = useState([]);
+
+  const loadAccessibilitiesData = async () => {
+    const resp = await fetch(
+      "https://hn49yz664f.execute-api.ap-southeast-1.amazonaws.com/Production/accessibilities"
+    );
+    let jsonData = await resp.json();
+    setaccessibilitiesData(jsonData);
+  };
+  const loadServicesData = async () => {
+    const resp = await fetch(
+      "https://hn49yz664f.execute-api.ap-southeast-1.amazonaws.com/Production/services"
+    );
+    let jsonData = await resp.json();
+
+    setServicesData(jsonData);
+  };
+  useEffect(() => {
+    loadServicesData();
+    loadAccessibilitiesData();
+  }, []);
   return (
     <div className="scene" id="hotelinfo">
       <article className="heading">
@@ -57,7 +77,7 @@ const HotelInfo = () => {
             needs:
           </p>
           <ul>
-            {amenitiesData.map((amenity) => (
+            {accessibilitiesData.map((amenity) => (
               <li>{`${amenity.name}`}</li>
             ))}
           </ul>
